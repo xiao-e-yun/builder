@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames":true,
+    "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": true,
+    "composite": true,
+    "moduleResolution":"Node",
+    "esModuleInterop": true,
+    "removeComments": true,
+    "importHelpers": true,
+    "declarationDir": ".",
+    "module": "ESNext",
+    "target": "esnext",
+    "declaration":true,
+    "rootDir": "src",
+    "strict": true,
+  },
+  "include": [
+    "src/build.ts",
+    "src/browser/**/*.ts",
+    "src/server/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

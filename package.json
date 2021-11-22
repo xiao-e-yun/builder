@@ -1,0 +1,25 @@
+{
+  "name": "wallpaper-engine-builder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node build dev",
+    "build": "node build build",
+    "tools_build": "esbuild src/build.ts --outfile=build.js --platform=node --format=cjs"
+  },
+  "keywords": [
+    "builder",
+    "config",
+    "wallpaper-engine"
+  ],
+  "author": "xiao-e-yun",
+  "license": "BSD-3-Clause",
+  "description": "",
+  "dependencies": {
+    "@types/node": "^16.11.9",
+    "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.13.15"
+  }
+}

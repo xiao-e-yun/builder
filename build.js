@@ -19,36 +19,43 @@ var __toModule = (module2) => {
 var import_process = __toModule(require("process"));
 var import_esbuild = __toModule(require("esbuild"));
 var import_child_process = __toModule(require("child_process"));
-var import_path = __toModule(require("path"));
 var import_promises = __toModule(require("fs/promises"));
-const pkg = require((0, import_path.resolve)("./package.json"));
-const external = [
-  ...Object.keys(pkg.dependencies || {}),
-  ...Object.keys(pkg.devDependencies || {})
-];
+var import_path = __toModule(require("path"));
 (async () => {
+  const pkg = JSON.parse(await import_promises.default.readFile("package.json", "utf8"));
+  const external = [
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.devDependencies || {})
+  ];
   const mode = import_process.argv[2] || "build";
   if (mode !== "build" && mode !== "dev")
     return console.error("\u6A21\u5F0F\u9700\u8981\u662F build | dev");
   const dev = mode === "dev";
   console.log(`\u6A21\u5F0F: ${mode}`);
+  if (!dev) {
+    await import_promises.default.rm(import_path.default.resolve(__dirname, "browser"), { recursive: true });
+    await import_promises.default.mkdir(import_path.default.resolve(__dirname, "node"), { recursive: true });
+  }
   const wait = [];
   wait.push(import_esbuild.default.build({
     entryPoints: ["src/browser/index.ts"],
     allowOverwrite: true,
     platform: "browser",
     outdir: "browser",
+    format: "esm",
     bundle: true,
     minify: !dev,
+    sourcemap: dev,
     watch: dev
   }));
   wait.push(import_esbuild.default.build({
-    entryPoints: ["src/server/index.ts"],
+    entryPoints: ["src/node/index.ts"],
     allowOverwrite: true,
     platform: "node",
-    outdir: "server",
+    outdir: "node",
     bundle: true,
     minify: !dev,
+    sourcemap: dev,
     watch: dev,
     external
   }));

@@ -5,20 +5,21 @@
     "emitDeclarationOnly": true,
     "composite": true,
     "moduleResolution":"Node",
+    "resolveJsonModule":true,
     "esModuleInterop": true,
-    "removeComments": true,
     "importHelpers": true,
     "declarationDir": ".",
-    "module": "ESNext",
-    "target": "esnext",
+    "module": "CommonJS",
+    "target": "ESNext",
     "declaration":true,
+    "sourceMap": true,
     "rootDir": "src",
     "strict": true,
   },
   "include": [
     "src/build.ts",
     "src/browser/**/*.ts",
-    "src/server/**/*.ts"
+    "src/node/**/*.ts"
   ],
   "exclude": [
     "node_modules"

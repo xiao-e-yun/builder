@@ -33,8 +33,10 @@ var import_path = __toModule(require("path"));
   const dev = mode === "dev";
   console.log(`\u6A21\u5F0F: ${mode}`);
   if (!dev) {
-    await import_promises.default.rm(import_path.default.resolve(__dirname, "browser"), { recursive: true });
-    await import_promises.default.mkdir(import_path.default.resolve(__dirname, "node"), { recursive: true });
+    await import_promises.default.rm(import_path.default.resolve(__dirname, "browser"), { recursive: true }).finally(async () => await import_promises.default.mkdir(import_path.default.resolve(__dirname, "browser"), { recursive: true })).catch(() => {
+    });
+    await import_promises.default.rm(import_path.default.resolve(__dirname, "node"), { recursive: true }).finally(async () => await import_promises.default.mkdir(import_path.default.resolve(__dirname, "node"), { recursive: true })).catch(() => {
+    });
   }
   const wait = [];
   wait.push(import_esbuild.default.build({

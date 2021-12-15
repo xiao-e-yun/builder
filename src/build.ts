@@ -18,10 +18,12 @@ import path from 'path';
   const dev = mode === "dev"
   console.log(`模式: ${mode}`)
   
-  if(!dev){
-    await fs.rm(path.resolve(__dirname,"browser"), { recursive: true })
-    await fs.mkdir(path.resolve(__dirname,"node"), { recursive: true })
-  }
+  await fs.rm(path.resolve(__dirname,"browser"), { recursive: true })
+    .finally(async()=>await fs.mkdir(path.resolve(__dirname,"browser"), { recursive: true }))
+    .catch(()=>{})
+  await fs.rm(path.resolve(__dirname,"node"), { recursive: true })
+    .finally(async()=>await fs.mkdir(path.resolve(__dirname,"node"), { recursive: true }))
+    .catch(()=>{})
 
   const wait: Promise<any>[] = []
 

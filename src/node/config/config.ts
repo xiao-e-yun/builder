@@ -6,12 +6,10 @@ export default interface OutputConfig extends BaseConfig {
   workshopurl ?: string
   general:{
     properties: {
-      [prop: string]: {[key:string]:any}
+      [prop: string]: Record<string,unknown>
     }
-    localization: {
-      [lang: string]: {
-        [ui_key:string]:string
-      }
+    localization?: {
+      [lang: string]: Record<string,string>
     }
     supportsaudioprocessing?: boolean
   }

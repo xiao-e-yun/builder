@@ -18,10 +18,10 @@ export interface PropType {
     type: "slider"
     value: number
 
-    precision: number
-    step: number
-    max: number
-    min: number
+    precision?: number
+    step?: number
+    max?: number
+    min?: number
   } & BaseProp
   color: {
     type: "color"
@@ -67,7 +67,7 @@ export interface CustomType {
   item: {
     type: "item"
     custom?: Partial<NomalProp>
-    value: boolean
+    value?: boolean
     list: Prop[]
   } & BaseProp
   /** 提示 */
@@ -85,6 +85,6 @@ type BaseProp = {
   /** @link https://fontawesome.com/v5.15/icons */
   icon?: string
   ignore?: boolean
-  condition?: string[];
+  condition?: string[] | string;
   fixed_order?: boolean;
 }

@@ -1,6 +1,6 @@
-import { CustomType, Prop, PropType, TextLang } from "./prop_type";
-import fs from "fs/promises";
-import OutputConfig from "./config";
+import { CustomType, Prop, PropType, TextLang } from "./prop_type"
+import fs from "fs/promises"
+import OutputConfig from "./config"
 
 type map_list = { [key: string]: string }
 const state = {
@@ -29,6 +29,7 @@ export default async function (
   console.groupCollapsed("設定屬性中")
   console.log(`繼承 ${cache.length} 個屬性`)
 
+  if(!general.localization) return //僅縮小TypeScript範圍
   const config = general.properties
   state.langs = general.localization
 
@@ -39,7 +40,7 @@ export default async function (
   console.groupEnd()
   console.log(`創建 ${Object.keys(cache.index).length} 個屬性`)
 
-  if (!Object.keys(general.localization).length) general.localization = undefined as any
+  if (!Object.keys(general.localization).length) general.localization = undefined
   await fs.writeFile("project.cache.json", JSON.stringify(cache_file))
 
   return state.used
@@ -48,7 +49,7 @@ export default async function (
 
 
 function insert(
-    config: { [key: string]: any },
+    config: {[prop: string]: Record<string, unknown>},
     prop: Prop,
     cache: {
       length: number;
@@ -69,9 +70,9 @@ function insert(
 
 
 
-        if (prop.all) options.push({ label: prop.all, value: -1 }) && console.debug(`|-允許 ALL`)
+        if (prop.all) options.push({ label: prop.all, value: -1 }) && console.debug("|-允許 ALL")
 
-        let wait_list = []
+        const wait_list = []
         for (const index in prop.options) {
           const condition = $condition.concat(prop.condition || [])
           const option = prop.options[index]
@@ -166,7 +167,7 @@ function insert(
           if(frist) frist = false
         })
         keys.forEach((key, index) =>
-          config[key].condition = config[key].condition.replace("{{}}", keys.at(--index))
+          config[key].condition = (config[key].condition as string).replace("{{}}", keys.at(--index) || "")
         )
         break
       }
@@ -204,7 +205,7 @@ function insert(
     })
 
     const order = prop.fixed_order ? state.index : ++state.index
-    const export_prop: any = prop
+    const export_prop:Partial<Prop> = prop
     export_prop.id = undefined
     export_prop.ignore = undefined
     export_prop.fixed_order = undefined
@@ -256,11 +257,11 @@ function string_index(str: string | number): string | number {
   const anum_len = 52 // anum.length as 52
 
   if (typeof str === "string") {
-    if (str.length == 1) return anum.indexOf(str);
+    if (str.length == 1) return anum.indexOf(str)
 
     let num = 0
     let times = 0
-    const list = str.split('').reverse()
+    const list = str.split("").reverse()
     for (const i of list) num += anum.indexOf(i) * (anum_len ** times++)
     return num
   } else {
@@ -271,7 +272,7 @@ function string_index(str: string | number): string | number {
       list.unshift(anum[i])
       str = (str - i) / anum_len
     }
-    return list.join('')
+    return list.join("")
   }
 }
 

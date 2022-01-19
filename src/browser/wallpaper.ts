@@ -70,7 +70,7 @@ export default interface General{
   /**插件延遲*/
   plugindelay: number
   /**插件*/
-  plugins: { [plugin: string]: any }
+  plugins: { [plugin: string]: unknown }
   /**後處理*/
   postprocessing: "enabled" | "normal" | "ultra"
   /**預設畫質*/
@@ -102,7 +102,7 @@ export default interface General{
   /**啟用Aero*/
   unpauseaero: boolean
   /**使用者顯示器*/
-  usermonitors: any
+  usermonitors: unknown
   /**音頻輸出*/
   videoaudiooutput: boolean
   /**視頻硬體加速*/

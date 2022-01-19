@@ -62,16 +62,16 @@ export default function <T extends List,U extends List>(
 
   if (config.props) {
     const props = config.props
-    listener.applyUserProperties = (items: { [key: string]: any }) => {
+    listener.applyUserProperties = (items: Record<string,Extract<NomalProp,{value:string}>>) => {
       //Config基礎屬性
       for (const item in items) {
         const prop = items[item]
         if(prop === null) continue
-        const val = prop.value as string
+        const val = prop.value
 
         const filter = {
           "color": () => val.split(" ").map((v) => parseFloat(v) * 255).join(","),
-          "file": () => val && typeof val === "string" && "file:///" + val,
+          "file": () => val && (typeof val === "string" && "file:///" + val) || "",
         }
 
         const type = prop.type as keyof typeof filter

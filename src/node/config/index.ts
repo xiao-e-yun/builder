@@ -85,7 +85,8 @@ async function builder(
 
 //
 function mergeDeep<T>(target: T, ...sources: Partial<T>[]): T {
-  const isObject = (item: any): item is object => item && typeof item === "object" && !Array.isArray(item) // 判斷是否為物件
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isObject = (item:any): item is object => item && typeof item === "object" && !Array.isArray(item) // 判斷是否為物件
 
   if (!sources.length) return target // 如果沒有資料
   const source = sources.shift() // 取得第一個資料

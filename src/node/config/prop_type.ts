@@ -1,8 +1,12 @@
 export type NomalProp = PropType[keyof PropType]
 export type Prop = NomalProp | CustomType[keyof CustomType]
+export interface IProp extends PropType,CustomType {}
+export type KeyProp = keyof PropType | keyof CustomType
 
 export interface PropType {
-  text: BaseProp
+  text:{
+    type?: "text",
+  } & BaseProp
   divider: {
     type: "divider"
   } & BaseProp
@@ -78,7 +82,7 @@ export type TextLang = string | { [lang: string]: string }
 type BaseProp = {
   id: string
   text: TextLang
-  /** https://fontawesome.com/v5.15/icons */
+  /** @link https://fontawesome.com/v5.15/icons */
   icon?: string
   ignore?: boolean
   condition?: string[];

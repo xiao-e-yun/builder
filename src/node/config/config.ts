@@ -1,5 +1,3 @@
-import { Prop } from "./prop_type";
-
 export default interface OutputConfig extends BaseConfig {
   tags?:string[]|unknown[]
   type?:string
@@ -7,10 +5,10 @@ export default interface OutputConfig extends BaseConfig {
   contentrating?:string
   workshopurl ?: string
   general:{
-    properties?: {
+    properties: {
       [prop: string]: {[key:string]:any}
     }
-    localization?: {
+    localization: {
       [lang: string]: {
         [ui_key:string]:string
       }

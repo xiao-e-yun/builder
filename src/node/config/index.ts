@@ -1,39 +1,36 @@
-import fs from "fs/promises";
+import fs from "fs/promises"
 
-import OutputConfig, { Config } from "./config";
-import { Prop } from "./prop_type";
-import load_prop from "./prop";
+import OutputConfig, { Config } from "./config"
+import { Prop } from "./prop_type"
+import load_prop from "./prop"
 
 export default {
   builder,
 }
 
-const root_prop = [
-  "contentrating",
-  "description",
-  "visibility",
-  "workshopid",
-  "preview",
-  "builder",
-  "title",
-  "file",
-  "tags",
-]
-
 type Options = {
-  custom?: OutputConfig,
-  out_config?: string,
-  out_types?: string,
-}
+  /** 修改配置檔案 */
+  custom?: OutputConfig;
+  /** 配置檔案位置 */
+  out_config?: string;
+  /** 型別檔案位置 */
+  out_types?: string;
+};
 
 /**
  * @name 建立配置文件
- * @param config 配置文件 
- * @param path 保存位置
+ * @param config 配置基礎
+ * @param property 屬性樹
+ * @param options 選項
  * @returns 返回配置文件
  */
-async function builder(config: Config, property: Prop[] = [], options?: Options) {
-  const $config: Config = {
+async function builder(
+  config: Config,
+  property: Prop[] = [],
+  options?: Options
+) {
+  config = {
+    // 默認配置
     tags: [],
     title: "NewProject",
     description: "hello world",
@@ -42,64 +39,63 @@ async function builder(config: Config, property: Prop[] = [], options?: Options)
     file: "index.html",
     visibility: "public",
     contentrating: "Everyone",
-    ...config
-  };
-
-  const json = {
-    general: {
-      properties: {},
-      localization: {}
-    }
-  } as OutputConfig
+    ...config, // 合併配置
+  }
 
   console.groupCollapsed("初始化配置檔案")
-  Object.keys($config).forEach(key => {
-    type KeyConfig = keyof Config
-    const value = $config[key as KeyConfig]
-    if (root_prop.indexOf(key) !== -1) json[key as KeyConfig] = value as any
-    if (key === "audio") json.general.supportsaudioprocessing = value as boolean
-    if (key === "workshopid") json.workshopurl = "steam://url/CommunityFilePage/" + value
-  })
 
-  const types = await load_prop(json.general as any, property)
-  const res = {
-    config: options?.custom ? mergeDeep(json, options?.custom) : json,
-    types,
-  }
+  const json = {
+    // 定義輸出的配置檔案
+    ...config,
+    general: {
+      properties: {},
+      localization: {},
+      supportsaudioprocessing: false,
+    },
+  } as OutputConfig
+
+  if ("audio" in config)
+    // 如果有音頻
+    (json.general.supportsaudioprocessing = config.audio), delete config.audio // 將音頻設置為支持音頻，並刪除音頻
+  if ("workshopid" in config)
+    // 如果有工作坊ID
+    json.workshopurl = "steam://url/CommunityFilePage/" + config.workshopid // 將workshopid設置為workshopurl
+
+  const types = await load_prop(json.general, property) // 將屬性樹帶入函式
 
   console.log("添加自訂屬性")
-  if (options?.out_types) await fs.writeFile(options?.out_types, JSON.stringify(res.types))
+  const output = options?.custom ? mergeDeep(json, options?.custom) : json // 配置
 
+  console.log("編譯成功") // 編譯成功
+  console.groupEnd() // 結束
 
-  console.log("編譯成功")
-  console.groupEnd()
-  if (options?.out_config) await fs.writeFile(options?.out_config, JSON.stringify(res.config))
+  if (options?.out_types)
+    // 如果有輸出型別檔案
+    await fs.writeFile(options?.out_types, JSON.stringify(types)) // 將型別檔案寫入
 
-  return res
-}
+  if (options?.out_config)
+    // 如果有輸出配置檔案
+    await fs.writeFile(options?.out_config, JSON.stringify(output)) // 將配置檔案寫入
 
-
-
-
-
-function isObject(item:any):item is object {
-  return (item && typeof item === 'object' && !Array.isArray(item));
-}
-
-function mergeDeep<T>(target:T, ...sources:Partial<T>[]):T {
-  if (!sources.length) return target;
-  const source = sources.shift();
-
-  if (isObject(target) && isObject(source)) {
-    for (const key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, { [key]: {} });
-        mergeDeep(target[key], source[key] as any);
-      } else {
-        Object.assign(target, { [key]: source[key] });
-      }
-    }
+  return {
+    config: output, // 配置
+    types, // 型別
   }
+}
 
-  return mergeDeep(target, ...sources);
+//
+function mergeDeep<T>(target: T, ...sources: Partial<T>[]): T {
+  const isObject = (item: any): item is object => item && typeof item === "object" && !Array.isArray(item) // 判斷是否為物件
+
+  if (!sources.length) return target // 如果沒有資料
+  const source = sources.shift() // 取得第一個資料
+
+  if (isObject(target) && isObject(source)) // 如果是物件
+    for (const key in source) // 遍歷資料
+    if (isObject(source[key])) { // 如果是物件
+      if (!target[key]) Object.assign(target, { [key]: {} }) // 如果沒有資料
+      mergeDeep(target[key], source[key] as T[keyof T]) // 物件合併
+    } else Object.assign(target, { [key]: source[key] }) // 普通合併
+
+  return mergeDeep(target, ...sources) // 遞迴
 }

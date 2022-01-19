@@ -1,5 +1,6 @@
 import { CustomType, Prop, PropType, TextLang } from "./prop_type";
 import fs from "fs/promises";
+import OutputConfig from "./config";
 
 type map_list = { [key: string]: string }
 const state = {
@@ -20,17 +21,7 @@ const state = {
 }
 
 export default async function (
-  general: {
-    supportsaudioprocessing: boolean;
-    properties: {
-      [key: string]: any;
-    };
-    localization: {
-      [lang: string]: {
-        [ui_key: string]: string
-      }
-    };
-  },
+  general: OutputConfig["general"],
   props: Prop[],
 ) {
   const cache_file = (await read())
@@ -65,10 +56,11 @@ function insert(
     },
     $condition: (string|((key:string)=>string))[] = []
   ) {
+  if(prop.type === undefined) prop.type = "text"
   const condition = $condition.concat(prop.condition || [])
 
   const custom = ["menu","item","tips"]
-  const is_custom = (prop:Prop):prop is CustomType[keyof CustomType] => "type" in prop && custom.includes(prop.type)
+  const is_custom = (prop:Prop):prop is CustomType[keyof CustomType] => "type" in prop && custom.includes(prop.type as string)
   if (is_custom(prop)) {
     console.groupCollapsed(`|${prop.id.split("/").at(-1)}|${prop.type}|`)
     switch (prop.type)  {

@@ -1,6 +1,6 @@
-node
-browser
-build.js
+/node
+/browser
+/build.js
 node_modules
 *.tsbuildinfo
 pnpm-lock.yaml

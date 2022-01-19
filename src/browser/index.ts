@@ -1,5 +1,5 @@
-import General from './wallpaper';
-import { NomalProp } from '../node/config/prop_type';
+import General from "./wallpaper"
+import { NomalProp } from "../node/config/prop_type"
 
 export type Types = {
   ignore: {
@@ -44,7 +44,7 @@ export default function <T extends List,U extends List>(
     wallpaperRequestRandomFileForProperty: (name: string, prop: string) => void;
     wallpaperPropertyListener: {
       setPaused?(paused: boolean): void
-      applyUserProperties?(user: any): void
+      applyUserProperties?(user: unknown): void
       applyGeneralProperties?(properties: General): void
       userDirectoryFilesAddedOrChanged?(name: string, files: string[]): void
       userDirectoryFilesRemoved?(name: string, files: string[]): void
@@ -74,8 +74,8 @@ export default function <T extends List,U extends List>(
           "file": () => val && typeof val === "string" && "file:///" + val,
         }
 
-        const type = prop.type as keyof typeof filter;
-        prop.value = type in filter ? filter[type]() : val;
+        const type = prop.type as keyof typeof filter
+        prop.value = type in filter ? filter[type]() : val
 
         if(item in props_map) props(props_map[item], prop.value, prop)
         else props("$"+item, prop.value, prop)
@@ -85,6 +85,7 @@ export default function <T extends List,U extends List>(
 
   //監聽資料夾
   if (config.fetch && Object.keys(types_json.directory.fetch).length) {
+    const send = (name:string)=>{ fetch(props_map[name], state[name].map((v)=>"file:///" + v)) }
 
     const mapping = types_json.directory.fetch
     const props_map = {} as { [key: string]: string }
@@ -104,7 +105,6 @@ export default function <T extends List,U extends List>(
       send(name)
     }
 
-    function send(name:string) { fetch(props_map[name], state[name].map((v)=>"file:///" + v)) }
   }
 
   if(config.audio) (win as unknown as PropListener).wallpaperRegisterAudioListener(config.audio)

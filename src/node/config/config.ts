@@ -24,6 +24,9 @@ export interface Config extends BaseConfig {
   contentrating?: "Everyone" | "Questionable" | "Mature"
   /** 可見性 */
   visibility?: "public" | "friends" | "hidden" | "unlisted"
+  /** 建構版本 */
+  buildVersion?: string
+
 }
 
 export interface BaseConfig {

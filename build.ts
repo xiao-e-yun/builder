@@ -2,10 +2,12 @@ import { argv } from "process"
 import esbuild from "esbuild"
 import { exec } from "child_process"
 import fs from "fs/promises"
-import path from "path";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-(async () => {
+;(async () => {
   const pkg = JSON.parse(await fs.readFile("package.json", "utf8"))
   const external = [
     ...Object.keys(pkg.dependencies || {}),
@@ -32,6 +34,7 @@ import path from "path";
       entryPoints: ["src/browser/index.ts"],
       allowOverwrite: true,
       platform: "browser",
+      target: "esnext",
       outdir: "browser",
       format: "esm",
       bundle: true,
@@ -46,7 +49,9 @@ import path from "path";
       entryPoints: ["src/node/index.ts"],
       allowOverwrite: true,
       platform: "node",
+      target: "esnext",
       outdir: "node",
+      format: "esm",
       bundle: true,
       minify: !dev,
       sourcemap: dev,
@@ -58,5 +63,4 @@ import path from "path";
   if (!dev) await fs.rm("tsconfig.tsbuildinfo").catch(console.warn)
   wait.push(new Promise((done) => exec(`tsc ${dev ? "-w" : ""}`, done)))
   await Promise.all(wait)
-  fs.rm("build.d.ts")
 })()

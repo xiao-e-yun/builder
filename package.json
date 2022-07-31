@@ -6,9 +6,9 @@
     "./node": "./node/index.js"
   },
   "scripts": {
-    "dev": "node build dev",
-    "build": "node build build",
-    "tools_build": "esbuild src/build.ts --outfile=build.js --platform=node --format=cjs",
+    "dev": "tsx build dev",
+    "build": "tsx build build",
+    "tools_build": "esbuild src/build.ts --outfile=build.js",
     "lint": "eslint src --fix"
   },
   "pre-commit": [
@@ -19,6 +19,7 @@
     "config",
     "wallpaper-engine"
   ],
+  "type": "module",
   "author": "xiao-e-yun",
   "license": "BSD-3-Clause",
   "description": "",

@@ -1,5 +1,5 @@
 import General from "./wallpaper"
-import { NomalProp } from "../node/config/prop_type"
+import { NomalProp } from "../node/_config/prop_type"
 
 export type Types = {
   ignore: {

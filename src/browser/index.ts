@@ -112,7 +112,7 @@ export default function <T extends List,U extends List>(
 
 
 interface Config<T,U> {
-  paused?(): void
+  paused?(paused: boolean): void
   general?(name: General): void
   props?(name: keyof T, value: boolean | string | number, prop: NomalProp): void
   fetch?(name: keyof U, files: string[]): void

@@ -30,21 +30,21 @@ export default interface General{
   /**圖形API*/
   graphicsapi: "dxgi"
   /**已顯示高優先權警告*/
-  hasshownhighprioritywarning: true
+  hasshownhighprioritywarning: boolean
   /**已顯示歡迎對話框*/
-  hasshownwelcomedialog: true
+  hasshownwelcomedialog: boolean
   /**圖示不透明度*/
-  iconopacity: 100
+  iconopacity: number
   /**↑↑↓↓←→←→BA*/
-  konami: true
+  konami: boolean
   /**語言*/
-  language: "zh-cht"
+  language: string
   /**unknown*/
   location: { videoaudiooutput: boolean }
   /**日誌等級*/
   loglevel: "error"
   /**啟用日誌檔*/
-  logtofileenabled: true
+  logtofileenabled: boolean
   /**顯示器檢測方式*/
   monitordetection: "devicepath"
   /**多重采樣*/
